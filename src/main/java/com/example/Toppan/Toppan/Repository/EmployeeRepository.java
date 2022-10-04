@@ -22,6 +22,8 @@ public interface EmployeeRepository extends CrudRepository<Employee, String> {
 
 	List<Employee> findAll(Sort by);
 	
-	Page<Employee> findAllPagination(PageRequest page);
+	Page<Employee> findAll(PageRequest page);
+	
+	List<Employee> findAll();
 
 }

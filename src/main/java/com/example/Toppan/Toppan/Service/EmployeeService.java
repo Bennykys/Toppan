@@ -16,6 +16,6 @@ public interface EmployeeService {
 	
 	List<Employee> getAllEmployees(String field);
 	
-	Page<Employee> getAllEmployeesWithPaginaation(int offset, int pageSize);
+	List<Employee> getAllEmployeesWithPagination(int minSalary, int maxSalary, int offset, int pageSize, String field);
 
 }

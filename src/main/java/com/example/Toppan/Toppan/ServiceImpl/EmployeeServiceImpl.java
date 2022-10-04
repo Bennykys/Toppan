@@ -4,8 +4,11 @@ import java.awt.print.Pageable;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,7 +32,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	private String line = "";
 
-	private String filepath = "C:/Users/bkwoh/Desktop/Toppan/Toppan/";
+	private String filepath = "C:/Users/65901/Desktop/LAPTOP/Toppan/";
 
 	@Override
 	public void upload(MultipartFile mFile) {
@@ -72,10 +75,19 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public Page<Employee> getAllEmployeesWithPaginaation(int offset, int pageSize) {
-		Page <Employee> emp =  employeeRepository.findAllPagination(PageRequest.of(offset, pageSize));
+	public List<Employee> getAllEmployeesWithPagination(int minSalary, int maxSalary, int offset, int pageSize,
+			String field) {
 		
-		return emp;
-		
+		log.info(field);
+
+		List<Employee> empBeforeSort = employeeRepository.findAll(Sort.by(Sort.Direction.ASC, field));
+
+		List<Employee> employee = empBeforeSort.stream()
+				.filter(e -> e.getSalary() > minSalary && e.getSalary() < maxSalary).skip(offset).limit(pageSize)
+				.collect(Collectors.toList());
+
+		return employee;
+
 	}
+
 }

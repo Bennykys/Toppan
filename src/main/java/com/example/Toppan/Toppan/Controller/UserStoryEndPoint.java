@@ -50,17 +50,17 @@ public class UserStoryEndPoint {
 
 	}
 
-	@GetMapping("/users/{field}")
-	public EmployeePaginationResponse<List<Employee>> getAllEmployees(@PathVariable String field) {
+	@GetMapping("/usersPagination/")
+	public EmployeePaginationResponse<List<Employee>> getAllEmployees( String field) {
 		List<Employee> list = employeeService.getAllEmployees(field);
 		return new EmployeePaginationResponse<>(list.size(), list);
 	}
 
-	@GetMapping("/users/{offset}/{pageSize}")
-	public EmployeePaginationResponse<List<Employee>> getAllEmployeesWithPagination(@PathVariable int offset,
-			@PathVariable int pageSize) {
-		Page<Employee> emp = employeeService.getAllEmployeesWithPaginaation(offset, pageSize);
-		return new EmployeePaginationResponse<>(emp.getSize(), emp);
+	@GetMapping("/users/")
+	public EmployeePaginationResponse<List<Employee>> getAllEmployeesWithPagination
+	(int minSalary, int maxSalary, int offset, int limit, String field) {
+		List<Employee> emp = employeeService.getAllEmployeesWithPagination(minSalary, maxSalary, offset, limit, field);
+		return new EmployeePaginationResponse<>(emp.size(), emp);
 	}
 
 }
