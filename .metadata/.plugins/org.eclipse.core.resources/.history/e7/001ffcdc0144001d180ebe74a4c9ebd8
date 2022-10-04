@@ -38,7 +38,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public void upload(MultipartFile mFile) {
 
 		try {
-			@SuppressWarnings("resource")
 			BufferedReader br = new BufferedReader(new FileReader(filepath + mFile.getOriginalFilename()));
 			while ((line = br.readLine()) != null) {
 
