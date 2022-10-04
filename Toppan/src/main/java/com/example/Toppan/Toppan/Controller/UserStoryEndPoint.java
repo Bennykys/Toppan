@@ -2,12 +2,15 @@ package com.example.Toppan.Toppan.Controller;
 
 import org.springframework.http.MediaType;
 
+import java.awt.print.Pageable;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -38,6 +41,11 @@ public class UserStoryEndPoint {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
+	}
+
+	@GetMapping("/users/search")
+	public ResponseEntity readBooks(Pageable pageable) {
+		return ResponseEntity.ok(employeeService.readEmployee(pageable));
 	}
 
 }

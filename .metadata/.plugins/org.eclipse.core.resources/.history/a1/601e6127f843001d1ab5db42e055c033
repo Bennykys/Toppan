@@ -1,0 +1,67 @@
+package com.example.Toppan.Toppan.Controller;
+
+import org.springframework.http.MediaType;
+
+import java.awt.print.Pageable;
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.example.Toppan.Toppan.Dto.EmployeePaginationResponse;
+import com.example.Toppan.Toppan.Model.Employee;
+import com.example.Toppan.Toppan.Service.EmployeeService;
+
+import lombok.extern.slf4j.Slf4j;
+
+@RestController
+@CrossOrigin(origins = "*")
+@Slf4j
+public class UserStoryEndPoint {
+
+	@Autowired
+	private EmployeeService employeeService;
+
+	@PostMapping(path = "/users/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@ResponseStatus(HttpStatus.OK)
+	@Transactional
+	public ResponseEntity<Void> postEmployeeData(@RequestParam("file") MultipartFile file) {
+		log.info("Start postEmployeeData(), file={}", file);
+		if (!file.isEmpty()) {
+			employeeService.upload(file);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+	}
+
+	@GetMapping("/users/{field}")
+	public EmployeePaginationResponse<List<Employee>> getAllEmployees(@PathVariable String field) {
+		List<Employee> list = employeeService.getAllEmployees(field);
+		return new EmployeePaginationResponse<>(list.size(), list);
+	}
+
+	@GetMapping("/users/")
+	public EmployeePaginationResponse<List<Employee>> getAllEmployeesWithPagination
+	(int minSalary, int maxSalary, int offset, int limit, String field) {
+		log.info(field);
+		List<Employee> emp = employeeService.getAllEmployeesWithPaginaation(minSalary, maxSalary, offset, limit, field);
+		return new EmployeePaginationResponse<>(emp.size(), emp);
+	}
+
+}
