@@ -71,24 +71,38 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public List<Employee> getAllEmployees(String field) {
-		return employeeRepository.findAll(Sort.by(Sort.Direction.ASC, field));
+
+		List<Employee> allEmployee = field.startsWith("+")
+				? employeeRepository.findAll(Sort.by(Sort.Direction.ASC, field))
+				: field.startsWith("-") ? employeeRepository.findAll(Sort.by(Sort.Direction.DESC, field))
+						: employeeRepository.findAll();
+
+		return allEmployee;
 
 	}
 
 	@Override
 	public List<Employee> getAllEmployeesWithPagination(int minSalary, int maxSalary, int offset, int pageSize,
 			String field) {
-		
-		log.info(field);
 
-		List<Employee> empBeforeSort = employeeRepository.findAll(Sort.by(Sort.Direction.ASC, field));
+		List<Employee> empBeforeSort = field.startsWith("+")
+				? employeeRepository.findAll(Sort.by(Sort.Direction.ASC, field))
+				: field.startsWith("-") ? employeeRepository.findAll(Sort.by(Sort.Direction.DESC, field))
+						: employeeRepository.findAll();
 
 		List<Employee> employee = empBeforeSort.stream()
-				.filter(e -> e.getSalary() > minSalary && e.getSalary() < maxSalary).skip(offset).limit(pageSize)
+				.filter(e -> e.getSalary() >= minSalary && e.getSalary() <= maxSalary).skip(offset).limit(pageSize)
 				.collect(Collectors.toList());
 
 		return employee;
 
+	}
+
+	@Override
+	public List<Employee> getEmployee() {
+		List<Employee> allEmployee = employeeRepository.findAll();
+
+		return allEmployee;
 	}
 
 }

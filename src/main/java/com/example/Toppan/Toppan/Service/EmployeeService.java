@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.Toppan.Toppan.Dto.EmployeeDTO;
 import com.example.Toppan.Toppan.Model.Employee;
 
 public interface EmployeeService {
@@ -15,6 +16,10 @@ public interface EmployeeService {
 	void upload(MultipartFile mFile);
 	
 	List<Employee> getAllEmployees(String field);
+	
+	List<Employee> getEmployee();
+	
+	Employee updateEmployee(EmployeeDTO employee);
 	
 	List<Employee> getAllEmployeesWithPagination(int minSalary, int maxSalary, int offset, int pageSize, String field);
 

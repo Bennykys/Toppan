@@ -17,11 +17,13 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.Toppan.Toppan.Dto.EmployeeDTO;
 import com.example.Toppan.Toppan.Dto.EmployeePaginationResponse;
 import com.example.Toppan.Toppan.Model.Employee;
 import com.example.Toppan.Toppan.Service.EmployeeService;
@@ -51,16 +53,28 @@ public class UserStoryEndPoint {
 	}
 
 	@GetMapping("/usersPagination/")
-	public EmployeePaginationResponse<List<Employee>> getAllEmployees( String field) {
+	public EmployeePaginationResponse<List<Employee>> getAllEmployees(String field) {
 		List<Employee> list = employeeService.getAllEmployees(field);
 		return new EmployeePaginationResponse<>(list.size(), list);
 	}
 
 	@GetMapping("/users/")
-	public EmployeePaginationResponse<List<Employee>> getAllEmployeesWithPagination
-	(int minSalary, int maxSalary, int offset, int limit, String field) {
+	public EmployeePaginationResponse<List<Employee>> getAllEmployeesWithPagination(int minSalary, int maxSalary,
+			int offset, int limit, String field) {
 		List<Employee> emp = employeeService.getAllEmployeesWithPagination(minSalary, maxSalary, offset, limit, field);
 		return new EmployeePaginationResponse<>(emp.size(), emp);
+	}
+
+	@GetMapping("/users/getAll")
+	public ResponseEntity<List<Employee>> getAllEmployees() {
+
+		return new ResponseEntity<>(employeeService.getEmployee(), HttpStatus.OK);
+	}
+
+	@PutMapping("/users/Update")
+	public ResponseEntity<Employee> updateEmployee(EmployeeDTO employeeDTO) {
+
+		return new ResponseEntity<>(employeeService.updateEmployee(employeeDTO), HttpStatus.OK);
 	}
 
 }
