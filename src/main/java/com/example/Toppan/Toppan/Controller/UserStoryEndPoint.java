@@ -14,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -71,10 +72,22 @@ public class UserStoryEndPoint {
 		return new ResponseEntity<>(employeeService.getEmployee(), HttpStatus.OK);
 	}
 
-	@PutMapping("/users/Update")
+	@PostMapping("/users/add")
+	public ResponseEntity<Employee> addEmployee(EmployeeDTO employeeDTO) {
+
+		return new ResponseEntity<>(employeeService.addEmployee(employeeDTO), HttpStatus.OK);
+	}
+
+	@PutMapping("/users/update")
 	public ResponseEntity<Employee> updateEmployee(EmployeeDTO employeeDTO) {
 
 		return new ResponseEntity<>(employeeService.updateEmployee(employeeDTO), HttpStatus.OK);
+	}
+
+	@DeleteMapping("/users/delete")
+	public ResponseEntity<Void> deleteEmployee(String id) {
+		employeeService.deletEmployee(id);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }

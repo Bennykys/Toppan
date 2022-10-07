@@ -21,6 +21,10 @@ public interface EmployeeService {
 	
 	Employee updateEmployee(EmployeeDTO employee);
 	
+	Employee addEmployee(EmployeeDTO employee);
+	
+	void deletEmployee(String id);
+	
 	List<Employee> getAllEmployeesWithPagination(int minSalary, int maxSalary, int offset, int pageSize, String field);
 
 }

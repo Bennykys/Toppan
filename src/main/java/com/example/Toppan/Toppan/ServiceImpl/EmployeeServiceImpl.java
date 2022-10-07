@@ -1,22 +1,18 @@
 package com.example.Toppan.Toppan.ServiceImpl;
 
-import java.awt.print.Pageable;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.Toppan.Toppan.Dto.EmployeeDTO;
+import com.example.Toppan.Toppan.Exception.CustomException;
 import com.example.Toppan.Toppan.Model.Employee;
 import com.example.Toppan.Toppan.Repository.EmployeeRepository;
 import com.example.Toppan.Toppan.Service.EmployeeService;
@@ -103,6 +99,47 @@ public class EmployeeServiceImpl implements EmployeeService {
 		List<Employee> allEmployee = employeeRepository.findAll();
 
 		return allEmployee;
+	}
+
+	@Override
+	public Employee updateEmployee(EmployeeDTO employee) {
+		Optional<Employee> emp = employeeRepository.findById(employee.getId());
+		if (!emp.isPresent()) {
+			throw new CustomException("User does not exist");
+		}
+		Employee existEmp = emp.get();
+		existEmp.setId(employee.getId());
+		existEmp.setLogin(employee.getLogin());
+		existEmp.setName(employee.getName());
+		existEmp.setSalary(employee.getSalary());
+		employeeRepository.save(existEmp);
+		return existEmp;
+	}
+
+	@Override
+	public void deletEmployee(String id) {
+		Optional<Employee> emp = employeeRepository.findById(id);
+		if (!emp.isPresent()) {
+			throw new CustomException("User does not exist");
+		}
+		Employee existEmp = emp.get();
+		employeeRepository.delete(existEmp);
+
+	}
+
+	@Override
+	public Employee addEmployee(EmployeeDTO employee) {
+		Optional<Employee> emp = employeeRepository.findById(employee.getId());
+		if (emp.isPresent()) {
+			throw new CustomException("User already exist");
+		}
+		Employee newEmployee = new Employee();
+		newEmployee.setId(employee.getId());
+		newEmployee.setLogin(employee.getLogin());
+		newEmployee.setName(employee.getName());
+		newEmployee.setSalary(employee.getSalary());
+		employeeRepository.save(newEmployee);
+		return newEmployee;
 	}
 
 }
