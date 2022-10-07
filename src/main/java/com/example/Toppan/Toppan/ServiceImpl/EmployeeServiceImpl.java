@@ -102,7 +102,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public Employee updateEmployee(EmployeeDTO employee) {
+	public Employee updateEmployee(Employee employee) {
+		
+		
 		Optional<Employee> emp = employeeRepository.findById(employee.getId());
 		if (!emp.isPresent()) {
 			throw new CustomException("User does not exist");
@@ -128,7 +130,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public Employee addEmployee(EmployeeDTO employee) {
+	public Employee addEmployee(Employee employee) {
+		log.info("emp = {}", employee);
 		Optional<Employee> emp = employeeRepository.findById(employee.getId());
 		if (emp.isPresent()) {
 			throw new CustomException("User already exist");

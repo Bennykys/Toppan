@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,13 +55,13 @@ public class UserStoryEndPoint {
 	}
 
 	@GetMapping("/usersPagination/")
-	public EmployeePaginationResponse<List<Employee>> getAllEmployees(String field) {
+	public EmployeePaginationResponse<List<Employee>> getAllEmployees(@RequestBody String field) {
 		List<Employee> list = employeeService.getAllEmployees(field);
 		return new EmployeePaginationResponse<>(list.size(), list);
 	}
 
 	@GetMapping("/users/")
-	public EmployeePaginationResponse<List<Employee>> getAllEmployeesWithPagination(int minSalary, int maxSalary,
+	public EmployeePaginationResponse<List<Employee>> getAllEmployeesWithPagination(@RequestBody int minSalary, int maxSalary,
 			int offset, int limit, String field) {
 		List<Employee> emp = employeeService.getAllEmployeesWithPagination(minSalary, maxSalary, offset, limit, field);
 		return new EmployeePaginationResponse<>(emp.size(), emp);
@@ -72,20 +73,21 @@ public class UserStoryEndPoint {
 		return new ResponseEntity<>(employeeService.getEmployee(), HttpStatus.OK);
 	}
 
-	@PostMapping("/users/add")
-	public ResponseEntity<Employee> addEmployee(EmployeeDTO employeeDTO) {
-
-		return new ResponseEntity<>(employeeService.addEmployee(employeeDTO), HttpStatus.OK);
+	@PostMapping(path = "/users/add",  consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee) {
+		log.info("Received details = {}", employee);
+		return new ResponseEntity<>(employeeService.addEmployee(employee), HttpStatus.OK);
 	}
 
-	@PutMapping("/users/update")
-	public ResponseEntity<Employee> updateEmployee(EmployeeDTO employeeDTO) {
-
-		return new ResponseEntity<>(employeeService.updateEmployee(employeeDTO), HttpStatus.OK);
+	@PutMapping(path = "/users/update",  consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee) {
+		log.info("Received details = {}", employee);
+		return new ResponseEntity<>(employeeService.updateEmployee(employee), HttpStatus.OK);
 	}
 
-	@DeleteMapping("/users/delete")
-	public ResponseEntity<Void> deleteEmployee(String id) {
+	@DeleteMapping("/users/delete/{id}")
+	public ResponseEntity<Void> deleteEmployee(@PathVariable String id) {
+		
 		employeeService.deletEmployee(id);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
